@@ -20,8 +20,14 @@ func main() {
 			os.Exit(1)
 		}
 		input = strings.TrimRight(input, "\n\r")
+		input = strings.TrimSpace(input)
 
-		fmt.Printf("%v: command not found", input)
+		switch input {
+		case "exit":
+			os.Exit(0)
+		default:
+			fmt.Printf("%v: command not found", input)
+		}
 
 		fmt.Println()
 	}
