@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 )
 
 var builtins map[string]func([]string)
@@ -35,6 +36,11 @@ func main() {
 
 		if cmd, ok := builtins[args[0]]; ok {
 			cmd(args)
+		} else if binary, err := exec.LookPath(args[0]); err == nil {
+			exec_err := syscall.Exec(binary, args, os.Environ())
+			if exec_err != nil {
+				fmt.Printf("Error running %v: %v", cmd, exec_err)
+			}
 		} else {
 			fmt.Printf("%v: command not found\n", args[0])
 		}
