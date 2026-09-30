@@ -81,7 +81,7 @@ func type_fn(args []string) {
 	
 	cmd_abspath, exec_err := exec.LookPath(cmd)
 	if exec_err == nil {
-		fmt.Printf("%v is %v", cmd, cmd_abspath)
+		fmt.Printf("%v is %v\n", cmd, cmd_abspath)
 		return
 	}
 
