@@ -38,8 +38,8 @@ func main() {
 
 		if cmd, ok := builtins[args[0]]; ok {
 			cmd(args)
-		} else if binary, err := exec.LookPath(args[0]); err == nil {
-			process := exec.Command(binary, args[1:]...)
+		} else if _, err := exec.LookPath(args[0]); err == nil {
+			process := exec.Command(args[0], args[1:]...)
 			process.Stdin = os.Stdin
 			process.Stdout = os.Stdout
 			process.Stderr = os.Stderr
