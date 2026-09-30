@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -35,10 +36,8 @@ func main() {
 		if cmd, ok := builtins[args[0]]; ok {
 			cmd(args)
 		} else {
-			fmt.Printf("%v: command not found", args[0])
+			fmt.Printf("%v: command not found\n", args[0])
 		}
-
-		fmt.Println()
 	}
 }
 
@@ -65,13 +64,26 @@ func exit(args []string) {
 
 func echo(args []string) {
 	fmt.Print(strings.Join(args[1:], " "))
+	fmt.Println()
 }
 
 func type_fn(args []string) {
-	cmd := args[1]
-	if _, is_builtin := builtins[cmd]; is_builtin {
-		fmt.Printf("%v is a shell builtin", cmd)
-	} else {
-		fmt.Printf("%v: not found", cmd)
+	if len(args) < 2 {
+		return
 	}
+
+	cmd := args[1]
+
+	if _, is_builtin := builtins[cmd]; is_builtin {
+		fmt.Printf("%v is a shell builtin\n", cmd)
+		return
+	}
+	
+	cmd_abspath, exec_err := exec.LookPath(cmd)
+	if exec_err == nil {
+		fmt.Printf("%v is %v", cmd, cmd_abspath)
+		return
+	}
+
+	fmt.Printf("%v: not found\n", cmd)
 }
